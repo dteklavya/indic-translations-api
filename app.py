@@ -1,5 +1,6 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, json
 from translate import BhashiniTranslator
+from werkzeug.exceptions import HTTPException
 
 
 app = Flask(__name__)
@@ -18,6 +19,20 @@ def translate():
     translator = BhashiniTranslator(sourceLanguage, targetLanguage)
     translator.getPipeLine()
     return jsonify(translator.translate(text))
+
+
+@app.errorhandler(HTTPException)
+def handle_exception(exception):
+    response = exception.get_response()
+    response.data = json.dumps(
+        {
+            "code": exception.code,
+            "name": exception.name,
+            "description": exception.description,
+        }
+    )
+    response.content_type = "application/json"
+    return response
 
 
 if __name__ == "__main__":
