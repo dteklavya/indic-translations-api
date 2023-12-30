@@ -14,9 +14,10 @@ def home():
 def translate():
     sourceLanguage = request.json.get("sourceLanguage")
     targetLanguage = request.json.get("targetLanguage")
-    translator = BhashiniTranslator()
-    translator.getPipeLine(sourceLanguage, targetLanguage)
-    return jsonify(translator.pipeLineData)
+    text = request.json.get("text")
+    translator = BhashiniTranslator(sourceLanguage, targetLanguage)
+    translator.getPipeLine()
+    return jsonify(translator.translate(text))
 
 
 if __name__ == "__main__":
