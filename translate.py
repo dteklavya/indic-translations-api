@@ -1,6 +1,7 @@
 import requests, os
 from dotenv import load_dotenv
 import json
+import base64
 
 
 load_dotenv()
@@ -13,7 +14,7 @@ class BhashiniTranslator:
     targetLanguage: str
     pipeLineData: dict
 
-    def __init__(self, sourceLanguage, targetLanguage) -> None:
+    def __init__(self, sourceLanguage=None, targetLanguage=None) -> None:
         self.ulcaUserId = os.environ.get("userID")
         self.ulcaApiKey = os.environ.get("ulcaApiKey")
         if not self.ulcaUserId or not self.ulcaApiKey:
@@ -100,3 +101,93 @@ class BhashiniTranslator:
         except Exception as e:
             raise e
         return response.json().get("pipelineResponse")[0]["output"]
+
+    def getTTSPipeLine(self) -> None:
+        ulcaEndPoint = (
+            "https://meity-auth.ulcacontrib.org/ulca/apis/v0/model/getModelsPipeline"
+        )
+        requestPayload = json.dumps(
+            {
+                "pipelineTasks": [
+                    {
+                        "taskType": "tts",
+                        "config": {"language": {"sourceLanguage": self.sourceLanguage}},
+                    },
+                ],
+                "pipelineRequestConfig": {
+                    "pipelineId": "64392f96daac500b55c543cd",
+                },
+            }
+        )
+        headers = {
+            "ulcaApiKey": self.ulcaApiKey,
+            "userID": self.ulcaUserId,
+            "Content-Type": "application/json",
+        }
+        response = requests.post(
+            ulcaEndPoint,
+            data=requestPayload,
+            headers=headers,
+        )
+
+        self.pipeLineData = response.json()
+
+    def tts(self, text):
+        if not self.pipeLineData:
+            raise "Pipe Line data is not available"
+
+        callbackUrl = self.pipeLineData.get("pipelineInferenceAPIEndPoint").get(
+            "callbackUrl"
+        )
+        inferenceApiKey = (
+            self.pipeLineData.get("pipelineInferenceAPIEndPoint")
+            .get("inferenceApiKey")
+            .get("value")
+        )
+        serviceId = (
+            self.pipeLineData.get("pipelineResponseConfig")[0]
+            .get("config")[0]
+            .get("serviceId")
+        )
+
+        headers = {
+            "Authorization": inferenceApiKey,
+            "Content-Type": "application/json",
+        }
+
+        requestPayload = json.dumps(
+            {
+                "pipelineTasks": [
+                    {
+                        "taskType": "tts",
+                        "config": {
+                            "language": {
+                                "sourceLanguage": self.sourceLanguage,
+                            },
+                            "serviceId": serviceId,
+                            "gender": "female",
+                        },
+                    },
+                ],
+                "inputData": {
+                    "input": [{"source": text}],
+                    "audio": [{"audioContent": None}],
+                },
+            }
+        )
+
+        try:
+            response = requests.post(callbackUrl, data=requestPayload, headers=headers)
+        except Exception as e:
+            raise e
+
+        if response.status_code != 200:
+            raise "TTS Callback failed!"
+
+        b4audio = response.json()["pipelineResponse"][0]["audio"][0]["audioContent"]
+        decodedData = base64.b64decode(b4audio)
+        wav_file = "/tmp/tts.wav"
+        with open(wav_file, "wb") as wavFh:
+            wavFh.write(decodedData)
+
+        return wav_file
