@@ -13,10 +13,12 @@ class BhashiniTranslator:
     sourceLanguage: str
     targetLanguage: str
     pipeLineData: dict
+    pipeLineId: str
 
     def __init__(self, sourceLanguage=None, targetLanguage=None) -> None:
         self.ulcaUserId = os.environ.get("userID")
         self.ulcaApiKey = os.environ.get("ulcaApiKey")
+        self.pipeLineId = os.environ.get("DefaultPipeLineId")
         if not self.ulcaUserId or not self.ulcaApiKey:
             raise ("Invalid Credentials!")
         self.sourceLanguage = sourceLanguage
@@ -40,7 +42,7 @@ class BhashiniTranslator:
                     },
                 ],
                 "pipelineRequestConfig": {
-                    "pipelineId": "64392f96daac500b55c543cd",
+                    "pipelineId": self.pipeLineId,
                 },
             }
         )
@@ -115,7 +117,7 @@ class BhashiniTranslator:
                     },
                 ],
                 "pipelineRequestConfig": {
-                    "pipelineId": "64392f96daac500b55c543cd",
+                    "pipelineId": self.pipeLineId,
                 },
             }
         )
