@@ -17,7 +17,7 @@ def translate():
     targetLanguage = request.json.get("targetLanguage")
     text = request.json.get("text")
     translator = BhashiniTranslator(sourceLanguage, targetLanguage)
-    translator.getPipeLine()
+    translator.getTranslatorPipeLine()
     return jsonify(translator.translate(text))
 
 

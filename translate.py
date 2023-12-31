@@ -21,7 +21,7 @@ class BhashiniTranslator:
         self.sourceLanguage = sourceLanguage
         self.targetLanguage = targetLanguage
 
-    def getPipeLine(self) -> None:
+    def getTranslatorPipeLine(self) -> None:
         ulcaEndPoint = (
             "https://meity-auth.ulcacontrib.org/ulca/apis/v0/model/getModelsPipeline"
         )
