@@ -12,3 +12,8 @@ provider "aws" {
 resource "aws_ecr_repository" "translation_app_ecr_repo" {
   name = "translation-app-repo"
 }
+
+# ECS Cluster
+resource "aws_ecs_cluster" "translation_app_cluster" {
+  name = "translation-app-cluster"
+}
