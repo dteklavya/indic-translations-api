@@ -4,6 +4,7 @@ resource "aws_alb" "application_load_balancer" {
   load_balancer_type = "application"
   subnets = [
     "${aws_default_subnet.subnet_a.id}",
+    "${aws_default_subnet.subnet_b.id}",
   ]
   # security group
   security_groups = ["${aws_security_group.load_balancer_security_group.id}"]
