@@ -1,2 +1,2 @@
-# indic-translations-api
+# Indic Translations API
 Python API to interact with Bhashini.
