@@ -3,12 +3,13 @@ import cors from 'cors'
 import config from 'dotenv'
 
 import bhashini from 'bhashini-translation'
-import nmt from './controllers/bhashini.controllers.js'
+import nmt from './controllers/bhashini.controllers.mjs'
+import router from './routes/bhashini.routes.mjs'
 
 const app = express()
-const port = 3000
+const port = 3002
 
-const router = express.Router();
+// const router = express.Router();
 
 /* Global middlewares */
 app.use(cors())
@@ -25,9 +26,7 @@ app.get("/", (req, res) => {
     res.send("Welcome!")
 })
 
-app.post("/nmt", async (req, res) => {
-    return await nmt(req, res)
-})
+app.use("/", router)
 
 
 /* Server startup */
