@@ -22,10 +22,6 @@ const inferenceApiKey = process.env.InferenceApiKey
 
 bhashini.auth(userId, ulcaApiKey, inferenceApiKey)
 
-app.get("/", (req, res) => {
-    res.send("Welcome!")
-})
-
 app.use("/", router)
 
 
