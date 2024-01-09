@@ -2,31 +2,16 @@ import express from 'express'
 import cors from 'cors'
 import config from 'dotenv'
 import swaggerUI from 'swagger-ui-express'
-import swaggerJSdoc from 'swagger-jsdoc'
+import YAML from 'yamljs'
 
 import bhashini from 'bhashini-translation'
-import nmt from './controllers/bhashini.controllers.mjs'
 import router from './routes/bhashini.routes.mjs'
 
 const app = express()
 const port = 3002
 
 // swagger definition
-const swaggerSpec = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'Bhashini API',
-            version: '1.0.0',
-        },
-        servers: [
-            {
-                url: `http://localhost:${port}`,
-            }
-        ]
-    },
-    apis: ['./routes/*.mjs'],
-}
+const swaggerSpec = YAML.load('./swagger.yml') 
 
 /* Global middlewares */
 app.use(cors())
@@ -42,7 +27,7 @@ bhashini.auth(userId, ulcaApiKey, inferenceApiKey)
 app.use(
     '/api-docs',
     swaggerUI.serve,
-    swaggerUI.setup(swaggerJSdoc(swaggerSpec))
+    swaggerUI.setup(swaggerSpec)
 )
 
 app.use("/", router)
