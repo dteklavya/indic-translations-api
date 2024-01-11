@@ -7,7 +7,7 @@ servers:
   - url: http://localhost:3002
 components:
   schemas:
-     NMT:
+    NMT:
       type: object
       properties:
           sourceLanguage:
@@ -19,6 +19,18 @@ components:
           text:
               type: string
               description: Text to translate
+    TTS:
+      type: object
+      properties:
+          sourceLanguage:
+              type: string
+              description: Source Language
+          text:
+              type: string
+              description: Text to translate
+          gender:
+              type: string
+              description: Gender choice for voice in audio
 paths:
   /nmt:
     post:
@@ -33,5 +45,26 @@ paths:
       responses:
         200:
           description: Success
+        500:
+          description: Internal Server Error
+  /tts:
+    post:
+      summary: Text to speech
+      description: Get a text converted to speech
+      requestBody:
+        description: A JSON object containing source language, text and gender
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TTS'
+      responses:
+        200:
+          description: A JSON object containing user name and avatar
+          content:
+            application/audio:
+              schema:
+                type: string
+                format: base64
+                description: Base64-encoded contents of the audio
         500:
           description: Internal Server Error
