@@ -19,7 +19,7 @@ export const nmt = async (req, res) => {
 
 export const asr = async (req, res) => {
     const sourceLanguage = req.body.sourceLanguage
-    const base64String = "VWtsR1JuSVFCZ0JYUVZaRlptMTBJQklBQUFBREFBRUFJbFlBQUloWUFRQUVBQ0FBQUFCbVlXTjBCQUFBQUJDRUFRQmtZWFJoUUJBR0FMellZenBkalZFNkxKSnZPZ3pNWWpxclpYNDZuUU5kT2t3bWJUcThGMmc2Cg=="
+    const base64String = req.body.audio
     try {
         const result = await bhashini.asr(sourceLanguage, base64String)
 

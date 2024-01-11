@@ -31,6 +31,15 @@ components:
           gender:
               type: string
               description: Gender choice for voice in audio
+    ASR:
+      type: object
+      properties:
+          sourceLanguage:
+              type: string
+              description: Source Language
+          base64String:
+              type: string
+              description: Audio to convert to text
 paths:
   /nmt:
     post:
@@ -59,7 +68,7 @@ paths:
               $ref: '#/components/schemas/TTS'
       responses:
         200:
-          description: A JSON object containing user name and avatar
+          description: A WAV audio file
           content:
             application/audio:
               schema:
@@ -68,3 +77,19 @@ paths:
                 description: Base64-encoded contents of the audio
         500:
           description: Internal Server Error
+  /asr:
+      post:
+        summary: Automatic speech recognition
+        description: Get a text converted converted from speech
+        requestBody:
+          description: A JSON object containing source language and text
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ASR'
+        responses:
+          200:
+            description: A JSON object containing converted text
+          500:
+            description: Internal Server Error
+
