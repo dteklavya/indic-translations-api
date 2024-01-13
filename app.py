@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from bhashini_translator import Bhashini
 from werkzeug.exceptions import HTTPException
 import io
+import base64
 
 
 app = Flask(__name__)
@@ -28,13 +29,15 @@ def translate():
 def tts():
     sourceLanguage = request.json.get("sourceLanguage")
     text = request.json.get("text")
-    tts = Bhashini(sourceLanguage)
-    tts.getTTSPipeLine()
-    audio_file = tts.tts(text)
-    with open(audio_file, "rb") as af:
-        outBytes = io.BytesIO(af.read())
+    translator = Bhashini(sourceLanguage)
 
-    return send_file(outBytes, mimetype="audio/wav")
+    base64String = translator.tts(text)
+    decodedData = base64.b64decode(base64String)
+    wav_file = "/tmp/tts.wav"
+    with open(wav_file, "wb") as wavFh:
+        wavFh.write(decodedData)
+
+    return send_file(wav_file, mimetype="audio/wav")
 
 
 @app.errorhandler(HTTPException)
