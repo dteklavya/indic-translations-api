@@ -1,10 +1,13 @@
 from flask import Flask, jsonify, request, json, send_file
-from translate import BhashiniTranslator
+from dotenv import load_dotenv
+
+from bhashini_translator import Bhashini
 from werkzeug.exceptions import HTTPException
 import io
 
 
 app = Flask(__name__)
+load_dotenv()
 
 
 @app.route("/")
@@ -17,8 +20,7 @@ def translate():
     sourceLanguage = request.json.get("sourceLanguage")
     targetLanguage = request.json.get("targetLanguage")
     text = request.json.get("text")
-    translator = BhashiniTranslator(sourceLanguage, targetLanguage)
-    translator.getTranslatorPipeLine()
+    translator = Bhashini(sourceLanguage, targetLanguage)
     return jsonify(translator.translate(text))
 
 
@@ -26,7 +28,7 @@ def translate():
 def tts():
     sourceLanguage = request.json.get("sourceLanguage")
     text = request.json.get("text")
-    tts = BhashiniTranslator(sourceLanguage)
+    tts = Bhashini(sourceLanguage)
     tts.getTTSPipeLine()
     audio_file = tts.tts(text)
     with open(audio_file, "rb") as af:
