@@ -53,4 +53,17 @@ export const tts = async (req, res) => {
     }
 }
 
+export const asr_nmt = async (req, res) => {
+    const sourceLanguage = req.body.sourceLanguage
+    const targetLanguage = req.body.targetLanguage
+    const base64String = req.body.base64String
+    try {
+        const result = await bhashini.asr_nmt(sourceLanguage, targetLanguage, base64String)
+
+        res.status(200).json(result)
+    } catch (err) {
+        res.status(500).send(err)
+    }
+}
+
 export default nmt 
