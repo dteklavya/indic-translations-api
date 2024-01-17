@@ -40,6 +40,17 @@ def tts():
     return send_file(wav_file, mimetype="audio/wav")
 
 
+@app.route("/asr_nmt", methods=["POST"])
+def ars_nmt():
+    sourceLanguage = request.json.get("sourceLanguage")
+    targetLanguage = request.json.get("targetLanguage")
+    base64String = request.json.get("base64String")
+
+    translator = Bhashini(sourceLanguage, targetLanguage)
+    text = translator.asr_nmt(base64String)
+    return jsonify(text)
+
+
 @app.errorhandler(HTTPException)
 def handle_exception(exception):
     response = exception.get_response()
