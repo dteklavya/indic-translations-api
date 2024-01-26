@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 
 from bhashini_translator import Bhashini
 from werkzeug.exceptions import HTTPException
-import io
 import base64
 
 
@@ -41,13 +40,23 @@ def tts():
 
 
 @app.route("/asr_nmt", methods=["POST"])
-def ars_nmt():
+def asr_nmt():
     sourceLanguage = request.json.get("sourceLanguage")
     targetLanguage = request.json.get("targetLanguage")
     base64String = request.json.get("base64String")
 
     translator = Bhashini(sourceLanguage, targetLanguage)
     text = translator.asr_nmt(base64String)
+    return jsonify(text)
+
+
+@app.route("/asr", methods=["POST"])
+def asr():
+    sourceLanguage = request.json.get("sourceLanguage")
+    base64String = request.json.get("base64String")
+
+    translator = Bhashini(sourceLanguage)
+    text = translator.asr(base64String)
     return jsonify(text)
 
 
