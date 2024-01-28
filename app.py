@@ -77,6 +77,23 @@ def nmt_tts():
     return send_file(wav_file, mimetype="audio/wav")
 
 
+@app.route("/asr_nmt_tts", methods=["POST"])
+def asr_nmt_tts():
+    sourceLanguage = request.json.get("sourceLanguage")
+    targetLanguage = request.json.get("targetLanguage")
+    base64String = request.json.get("base64String")
+    gender = request.json.get("gender")
+    translator = Bhashini(sourceLanguage, targetLanguage)
+
+    base64String = translator.asr_nmt_tts(base64String)
+    decodedData = base64.b64decode(base64String)
+    wav_file = "/tmp/asr_nmt_tts.wav"
+    with open(wav_file, "wb") as wavFh:
+        wavFh.write(decodedData)
+
+    return send_file(wav_file, mimetype="audio/wav")
+
+
 @app.errorhandler(HTTPException)
 def handle_exception(exception):
     response = exception.get_response()
