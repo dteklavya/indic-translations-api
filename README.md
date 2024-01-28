@@ -31,6 +31,6 @@ Follwoing end-points are available ATM:
 
 `nmt_tts`: Translate text to target language and generates audio.
 
-`asr_nmt_tts`: ASR, translation and audio in target languade.
+`asr_nmt_tts`: ASR, translation and audio in target language.
 
 
