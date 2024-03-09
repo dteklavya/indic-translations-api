@@ -40,66 +40,22 @@ class TestTranslationAPI(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_translate_end_point(self):
-        pl_config = {
-            "languages": [{"sourceLanguage": "en", "targetLanguageList": ["hi"]}],
-            "pipelineResponseConfig": [
-                {
-                    "taskType": "translation",
-                    "config": [
-                        {
-                            "serviceId": "ai4bharat/indictrans-v2",
-                            "modelId": "641d1d6",
-                            "language": {
-                                "sourceLanguage": "en",
-                                "sourceScriptCode": "Latn",
-                                "targetLanguage": "hi",
-                                "targetScriptCode": "Deva",
-                            },
-                        }
-                    ],
-                }
-            ],
-            "feedbackUrl": "https://google.com/services/feedback/submit",
-            "pipelineInferenceAPIEndPoint": {
-                "callbackUrl": "https://google.com/services/inference/pipeline",
-                "inferenceApiKey": {
-                    "name": "Authorization",
-                    "value": "J|*wM4/ycjXv",
-                },
-                "isMultilingualEnabled": True,
-                "isSyncApi": True,
-            },
-            "pipelineInferenceSocketEndPoint": {
-                "callbackUrl": "wss://dhruva-api.bhashini.gov.in",
-                "inferenceApiKey": {
-                    "name": "Authorization",
-                    "value": "J|*wM4/ycjXv",
-                },
-                "isMultilingualEnabled": True,
-                "isSyncApi": True,
-            },
-        }
-
         response = self.client.post(
             "/api/token/", data={"username": "testuser", "password": "password"}
         )
         token = response.data.get("access")
 
         with mock.patch(
-            "bhashini_translator.pipeline_config.requests"
-        ) as mock_pl_request, mock.patch(
-            "bhashini_translator.bhashini_translator.Bhashini.compute_response"
+            "bhashini_translator.bhashini_translator.Bhashini.translate"
         ) as mock_main:
-            mock_pl_request.post.return_value.json.return_value = pl_config
-            mock_pl_request.post().status_code = 200
-
             self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
 
-            mock_main.post.return_value.json.return_value = pl_config
-            mock_main.post().status_code = 200
+            mock_main.return_value = "mock translated text"
 
             response = self.client.post(
                 "/api/translate/",
                 {"sourceLanguage": "en", "targetLanguage": "hi", "text": "hello"},
             )
             self.assertIsNotNone(response)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data, "mock translated text")
