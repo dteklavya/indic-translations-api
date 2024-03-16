@@ -17,6 +17,9 @@ import base64
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def translate(request):
+    """
+    Returns translated text from source to target language.
+    """
     sourceLanguage = request.data.get("sourceLanguage")
     targetLanguage = request.data.get("targetLanguage")
     text = request.data.get("text")
@@ -27,6 +30,9 @@ def translate(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def tts(request):
+    """
+    Returns audio playback for given text.
+    """
     sourceLanguage = request.data.get("sourceLanguage")
     text = request.data.get("text")
     translator = Bhashini(sourceLanguage)
