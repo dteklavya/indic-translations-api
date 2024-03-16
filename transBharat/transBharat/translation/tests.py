@@ -31,7 +31,7 @@ class TestTranslationAPI(TestCase):
         self.user.delete()
         return super().tearDown()
 
-    def test_auth_required(self):
+    def test_auth_required_for_translate(self):
         response = self.client.post(
             "/api/translate/",
             {"sourceLanguage": "en", "targetLanguage": "hi", "text": "hello"},
