@@ -10,8 +10,10 @@ from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from unittest import TestCase, mock, main
+from unittest import TestCase, mock
 import os
+import base64
+from io import BytesIO
 
 User = get_user_model()
 
@@ -59,3 +61,38 @@ class TestTranslationAPI(TestCase):
             self.assertIsNotNone(response)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(response.data, "mock translated text")
+
+    def test_auth_required_tts(self):
+        response = self.client.post(
+            "/api/tts/",
+            {"sourceLanguage": "en", "text": "hello"},
+        )
+        self.assertIsNotNone(response)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_tts_end_point(self):
+        response = self.client.post(
+            "/api/token/", data={"username": "testuser", "password": "password"}
+        )
+        token = response.data.get("access")
+
+        with mock.patch(
+            "bhashini_translator.bhashini_translator.Bhashini.tts"
+        ) as mock_main:
+            self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+
+            mockstr = b"mock base64 encode string"
+            return_value = BytesIO()
+            buffer = BytesIO()
+            buffer.write(mockstr)
+            base64.encode(buffer, return_value)
+
+            mock_main.return_value = return_value.getvalue()
+
+            response = self.client.post(
+                "/api/tts/",
+                {"sourceLanguage": "en", "text": "hello"},
+            )
+            self.assertIsNotNone(response)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertTrue(response.as_attachment)
