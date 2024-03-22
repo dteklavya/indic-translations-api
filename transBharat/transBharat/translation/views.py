@@ -49,3 +49,15 @@ def tts(request):
     # TODO: Change this to upload audio file to S3 and send back link as response
     buffer.seek(0)
     return FileResponse(buffer, filename=wav_file, as_attachment=True)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def asr_nmt(request):
+    sourceLanguage = request.data.get("sourceLanguage")
+    targetLanguage = request.data.get("targetLanguage")
+    base64String = request.data.get("base64String")
+
+    translator = Bhashini(sourceLanguage, targetLanguage)
+    text = translator.asr_nmt(base64String)
+    return Response(text)

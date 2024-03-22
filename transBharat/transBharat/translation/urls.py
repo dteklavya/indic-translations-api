@@ -6,10 +6,11 @@ __credits__ = ["Rajesh Pethe"]
 
 
 from django.urls import path
-from .views import translate, tts
+from .views import translate, tts, asr_nmt
 
 
 urlpatterns = [
     path("translate/", translate, name="translate"),
     path("tts/", tts, name="tts"),
+    path("asr_nmt/", asr_nmt, name="asr_nmt"),
 ]
