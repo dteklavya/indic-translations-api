@@ -82,11 +82,6 @@ class TestTranslationAPI(TestCase):
             self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
 
             mockstr = base64.b64encode(b"mock base64 encode string")
-            return_value = BytesIO()
-            buffer = BytesIO()
-            buffer.write(mockstr)
-            base64.encode(buffer, return_value)
-
             mock_main.return_value = mockstr
 
             response = self.client.post(
