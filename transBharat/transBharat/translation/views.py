@@ -54,6 +54,10 @@ def tts(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def asr_nmt(request):
+    """
+    Given a base64 encoded audio, auto-recognizes source language
+    and converts it to text - in the given target language.
+    """
     sourceLanguage = request.data.get("sourceLanguage")
     targetLanguage = request.data.get("targetLanguage")
     base64String = request.data.get("base64String")
