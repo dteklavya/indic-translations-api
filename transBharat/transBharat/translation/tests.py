@@ -133,3 +133,29 @@ class TestTranslationAPI(TestCase):
         )
         self.assertIsNotNone(response)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_asr_end_point(self):
+        response = self.client.post(
+            "/api/token/", data={"username": "testuser", "password": "password"}
+        )
+        token = response.data.get("access")
+
+        with mock.patch(
+            "bhashini_translator.bhashini_translator.Bhashini.asr"
+        ) as mock_requests:
+            self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+
+            base64str = base64.b64encode(b"mock base64 encoded string")
+            mock_requests.return_value = b"mock base64 encoded string"
+
+            response = self.client.post(
+                "/api/asr/",
+                {
+                    "sourceLanguage": "en",
+                    "targetLanguage": "hi",
+                    "base64String": base64str,
+                },
+            )
+            self.assertIsNotNone(response)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data, b"mock base64 encoded string")
