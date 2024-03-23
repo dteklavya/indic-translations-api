@@ -54,6 +54,7 @@ def tts(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def asr(request):
+    """Automatic Speech recognition - returns text given base64 encoded audio data."""
     sourceLanguage = request.data.get("sourceLanguage")
     base64String = request.data.get("base64String")
 
