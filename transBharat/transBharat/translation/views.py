@@ -53,6 +53,17 @@ def tts(request):
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
+def asr(request):
+    sourceLanguage = request.data.get("sourceLanguage")
+    base64String = request.data.get("base64String")
+
+    translator = Bhashini(sourceLanguage)
+    text = translator.asr(base64String)
+    return Response(text)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def asr_nmt(request):
     """
     Given a base64 encoded audio, auto-recognizes source language
