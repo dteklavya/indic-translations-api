@@ -125,3 +125,11 @@ class TestTranslationAPI(TestCase):
             self.assertIsNotNone(response)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(response.data, b"mock base64 encoded string")
+
+    def test_auth_required_asr(self):
+        response = self.client.post(
+            "/api/asr/",
+            {"sourceLanguage": "en", "targetLanguage": "hi", "text": "hello"},
+        )
+        self.assertIsNotNone(response)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
