@@ -14,5 +14,5 @@ urlpatterns = [
     path("tts/", tts, name="tts"),
     path("asr_nmt/", asr_nmt, name="asr_nmt"),
     path("asr/", asr, name="asr"),
-    path("nmt_tts/", asr, name="nmt_tts"),
+    path("nmt_tts/", nmt_tts, name="nmt_tts"),
 ]
