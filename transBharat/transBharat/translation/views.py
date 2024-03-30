@@ -82,6 +82,9 @@ def asr_nmt(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def nmt_tts(request):
+    """
+    Text to speech, with translation to target language.
+    """
     sourceLanguage = request.data.get("sourceLanguage")
     targetLanguage = request.data.get("targetLanguage")
     text = request.data.get("text")
