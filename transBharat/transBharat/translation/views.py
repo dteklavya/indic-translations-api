@@ -77,3 +77,26 @@ def asr_nmt(request):
     translator = Bhashini(sourceLanguage, targetLanguage)
     text = translator.asr_nmt(base64String)
     return Response(text)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def nmt_tts(request):
+    sourceLanguage = request.data.get("sourceLanguage")
+    targetLanguage = request.data.get("targetLanguage")
+    text = request.data.get("text")
+    gender = request.data.get("gender")
+    translator = Bhashini(sourceLanguage, targetLanguage)
+
+    base64String = translator.nmt_tts(text)
+    decodedData = base64.b64decode(base64String)
+
+    buffer = BytesIO()
+    buffer.write(decodedData)
+    wav_file = "/tmp/nmt_tts.wav"
+    with open(wav_file, "wb") as outfile:
+        outfile.write(buffer.getbuffer())
+
+    # TODO: Get this to S3 and send back link as response
+    buffer.seek(0)
+    return FileResponse(buffer, filename=wav_file, as_attachment=True)
