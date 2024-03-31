@@ -108,6 +108,10 @@ def nmt_tts(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def asr_nmt_tts(request):
+    """
+    ASR-NMT-TTS (Automatic Speech Recognition - Neural Machine Translation - Text to Speech)
+    Automatic Speech recongnition, translation and conversion to audio.
+    """
     sourceLanguage = request.data.get("sourceLanguage")
     targetLanguage = request.data.get("targetLanguage")
     base64String = request.data.get("base64String")
