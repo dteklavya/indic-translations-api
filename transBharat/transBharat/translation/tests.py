@@ -199,3 +199,16 @@ class TestTranslationAPI(TestCase):
             self.assertIsNotNone(response)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertTrue(response.as_attachment)
+
+    def test_auth_required_asr_nmt_tts(self):
+        response = self.client.post(
+            "/api/asr_nmt_tts/",
+            {
+                "sourceLanguage": "en",
+                "targetLanguage": "hi",
+                "text": "hello",
+                "gender": "female",
+            },
+        )
+        self.assertIsNotNone(response)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
