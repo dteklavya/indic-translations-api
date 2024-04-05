@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "transBharat.core",
     "transBharat.translation",
+    "rest_framework_swagger",
+    "drf_yasg",
 ]
 
 REST_FRAMEWORK = {
