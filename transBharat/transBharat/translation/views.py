@@ -46,8 +46,19 @@ def translate(request):
     return Response(translator.translate(text))
 
 
+@extend_schema(
+    request=inline_serializer(
+        name="InlineTTSSerializer",
+        fields={
+            "sourceLanguage": serializers.CharField(),
+            "text": serializers.CharField(),
+        },
+    ),
+    responses={(200, "application/octet-stream"): OpenApiTypes.BINARY},
+)
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser])
 def tts(request):
     """
     Returns audio playback for given text.
