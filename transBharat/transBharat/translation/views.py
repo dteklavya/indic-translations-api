@@ -81,8 +81,19 @@ def tts(request):
     return FileResponse(buffer, filename=wav_file, as_attachment=True)
 
 
+@extend_schema(
+    request=inline_serializer(
+        name="InlineASRSerializer",
+        fields={
+            "sourceLanguage": serializers.CharField(),
+            "base64String": serializers.CharField(),
+        },
+    ),
+    responses={(200, "application/json"): OpenApiTypes.STR},
+)
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser])
 def asr(request):
     """Automatic Speech recognition - returns text given base64 encoded audio data."""
     sourceLanguage = request.data.get("sourceLanguage")
