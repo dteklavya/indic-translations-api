@@ -18,17 +18,19 @@ from drf_spectacular.utils import (
     extend_schema,
     inline_serializer,
 )
+from drf_spectacular.types import OpenApiTypes
 
 
 @extend_schema(
     request=inline_serializer(
-        name="InlineFormSerializer",
+        name="InlineTranslateSerializer",
         fields={
             "sourceLanguage": serializers.CharField(),
             "targetLanguage": serializers.CharField(),
             "text": serializers.CharField(),
         },
     ),
+    responses={(200, "application/json"): OpenApiTypes.STR},
 )
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
