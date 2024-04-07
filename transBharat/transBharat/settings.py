@@ -46,13 +46,24 @@ INSTALLED_APPS = [
     "transBharat.core",
     "transBharat.translation",
     "rest_framework_swagger",
-    "drf_yasg",
+    # "drf_yasg",
+    "drf_spectacular",
 ]
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Translation API for Indic languages, powered by Bhashini.",
+    "DESCRIPTION": "Translation API for Indic languages, powered by Bhashini.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "COMPONENT_SPLIT_REQUEST": True,
+}
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {

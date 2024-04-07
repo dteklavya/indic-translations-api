@@ -9,13 +9,30 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.http import FileResponse
 from io import BytesIO
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
+from rest_framework.parsers import MultiPartParser
+from rest_framework import serializers
 from bhashini_translator import Bhashini
 import base64
+from drf_spectacular.utils import (
+    extend_schema,
+    inline_serializer,
+)
 
 
+@extend_schema(
+    request=inline_serializer(
+        name="InlineFormSerializer",
+        fields={
+            "sourceLanguage": serializers.CharField(),
+            "targetLanguage": serializers.CharField(),
+            "text": serializers.CharField(),
+        },
+    ),
+)
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser])
 def translate(request):
     """
     Returns translated text from source to target language.
