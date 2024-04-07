@@ -104,8 +104,19 @@ def asr(request):
     return Response(text)
 
 
+@extend_schema(
+    request=inline_serializer(
+        name="InlineAsrNmtSerializer",
+        fields={
+            "sourceLanguage": serializers.CharField(),
+            "base64String": serializers.CharField(),
+        },
+    ),
+    responses={(200, "application/json"): OpenApiTypes.STR},
+)
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser])
 def asr_nmt(request):
     """
     Given a base64 encoded audio, auto-recognizes source language
@@ -120,8 +131,19 @@ def asr_nmt(request):
     return Response(text)
 
 
+@extend_schema(
+    request=inline_serializer(
+        name="InlineNmtTtsSerializer",
+        fields={
+            "sourceLanguage": serializers.CharField(),
+            "base64String": serializers.CharField(),
+        },
+    ),
+    responses={(200, "application/octet-stream"): OpenApiTypes.BINARY},
+)
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser])
 def nmt_tts(request):
     """
     Text to speech, with translation to target language.
@@ -146,8 +168,19 @@ def nmt_tts(request):
     return FileResponse(buffer, filename=wav_file, as_attachment=True)
 
 
+@extend_schema(
+    request=inline_serializer(
+        name="InlineAsrNmtTtsSerializer",
+        fields={
+            "sourceLanguage": serializers.CharField(),
+            "base64String": serializers.CharField(),
+        },
+    ),
+    responses={(200, "application/octet-stream"): OpenApiTypes.BINARY},
+)
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser])
 def asr_nmt_tts(request):
     """
     ASR-NMT-TTS (Automatic Speech Recognition - Neural Machine Translation - Text to Speech)
