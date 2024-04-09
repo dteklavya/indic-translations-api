@@ -21,6 +21,8 @@ Run `Django` app:
 python transBharat/manage.py runserver
 ```
 
+Authenticate using created user and obtain token from `/api/token/`.
+
 At this point, you can use `Postman` or other client for using APIs. Or visit [Swagger end-point](http://localhost:8000/api/schema/swagger-ui/) to play with.
 
 Follwoing end-points are available ATM:
