@@ -11,7 +11,7 @@ from django.http import FileResponse
 from io import BytesIO
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.parsers import MultiPartParser
-from rest_framework import serializers
+from rest_framework import serializers, status
 from bhashini_translator import Bhashini
 import base64
 from drf_spectacular.utils import (
@@ -19,17 +19,11 @@ from drf_spectacular.utils import (
     inline_serializer,
 )
 from drf_spectacular.types import OpenApiTypes
+from .serializers import TranslateSerializer
 
 
 @extend_schema(
-    request=inline_serializer(
-        name="InlineTranslateSerializer",
-        fields={
-            "sourceLanguage": serializers.CharField(),
-            "targetLanguage": serializers.CharField(),
-            "text": serializers.CharField(),
-        },
-    ),
+    request=TranslateSerializer,
     responses={(200, "application/json"): OpenApiTypes.STR},
 )
 @api_view(["POST"])
@@ -39,11 +33,14 @@ def translate(request):
     """
     Returns translated text from source to target language.
     """
-    sourceLanguage = request.data.get("sourceLanguage")
-    targetLanguage = request.data.get("targetLanguage")
-    text = request.data.get("text")
-    translator = Bhashini(sourceLanguage, targetLanguage)
-    return Response(translator.translate(text))
+    serializer = TranslateSerializer(data=request.data)
+    if serializer.is_valid():
+        sourceLanguage = request.data.get("sourceLanguage")
+        targetLanguage = request.data.get("targetLanguage")
+        text = request.data.get("text")
+        translator = Bhashini(sourceLanguage, targetLanguage)
+        return Response(translator.translate(text))
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @extend_schema(
