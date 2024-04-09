@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     "transBharat.core",
     "transBharat.translation",
     "rest_framework_swagger",
-    # "drf_yasg",
     "drf_spectacular",
 ]
 
