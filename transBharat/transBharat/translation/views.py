@@ -19,7 +19,14 @@ from drf_spectacular.utils import (
     inline_serializer,
 )
 from drf_spectacular.types import OpenApiTypes
-from .serializers import TranslateSerializer
+from .serializers import (
+    TranslateSerializer,
+    TtsSerializer,
+    AsrSerializer,
+    AsrNmtSerializer,
+    NmtTtsSerializer,
+    AsrNmtTtsSerializer,
+)
 
 
 @extend_schema(
@@ -44,13 +51,7 @@ def translate(request):
 
 
 @extend_schema(
-    request=inline_serializer(
-        name="InlineTTSSerializer",
-        fields={
-            "sourceLanguage": serializers.CharField(),
-            "text": serializers.CharField(),
-        },
-    ),
+    request=TtsSerializer,
     responses={(200, "application/octet-stream"): OpenApiTypes.BINARY},
 )
 @api_view(["POST"])
@@ -60,6 +61,10 @@ def tts(request):
     """
     Returns audio playback for given text.
     """
+    serializer = TtsSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     sourceLanguage = request.data.get("sourceLanguage")
     text = request.data.get("text")
     translator = Bhashini(sourceLanguage)
@@ -79,13 +84,7 @@ def tts(request):
 
 
 @extend_schema(
-    request=inline_serializer(
-        name="InlineASRSerializer",
-        fields={
-            "sourceLanguage": serializers.CharField(),
-            "base64String": serializers.CharField(),
-        },
-    ),
+    request=AsrSerializer,
     responses={(200, "application/json"): OpenApiTypes.STR},
 )
 @api_view(["POST"])
@@ -93,22 +92,20 @@ def tts(request):
 @parser_classes([MultiPartParser])
 def asr(request):
     """Automatic Speech recognition - returns text given base64 encoded audio data."""
-    sourceLanguage = request.data.get("sourceLanguage")
-    base64String = request.data.get("base64String")
 
-    translator = Bhashini(sourceLanguage)
-    text = translator.asr(base64String)
-    return Response(text)
+    serializer = AsrSerializer(data=request.data)
+    if serializer.is_valid():
+        sourceLanguage = request.data.get("sourceLanguage")
+        base64String = request.data.get("base64String")
+
+        translator = Bhashini(sourceLanguage)
+        text = translator.asr(base64String)
+        return Response(text)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @extend_schema(
-    request=inline_serializer(
-        name="InlineAsrNmtSerializer",
-        fields={
-            "sourceLanguage": serializers.CharField(),
-            "base64String": serializers.CharField(),
-        },
-    ),
+    request=AsrNmtSerializer,
     responses={(200, "application/json"): OpenApiTypes.STR},
 )
 @api_view(["POST"])
@@ -119,23 +116,20 @@ def asr_nmt(request):
     Given a base64 encoded audio, auto-recognizes source language
     and converts it to text - in the given target language.
     """
-    sourceLanguage = request.data.get("sourceLanguage")
-    targetLanguage = request.data.get("targetLanguage")
-    base64String = request.data.get("base64String")
+    serializer = AsrNmtSerializer(data=request.data)
+    if serializer.is_valid():
+        sourceLanguage = request.data.get("sourceLanguage")
+        targetLanguage = request.data.get("targetLanguage")
+        base64String = request.data.get("base64String")
 
-    translator = Bhashini(sourceLanguage, targetLanguage)
-    text = translator.asr_nmt(base64String)
-    return Response(text)
+        translator = Bhashini(sourceLanguage, targetLanguage)
+        text = translator.asr_nmt(base64String)
+        return Response(text)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @extend_schema(
-    request=inline_serializer(
-        name="InlineNmtTtsSerializer",
-        fields={
-            "sourceLanguage": serializers.CharField(),
-            "base64String": serializers.CharField(),
-        },
-    ),
+    request=NmtTtsSerializer,
     responses={(200, "application/octet-stream"): OpenApiTypes.BINARY},
 )
 @api_view(["POST"])
@@ -145,6 +139,11 @@ def nmt_tts(request):
     """
     Text to speech, with translation to target language.
     """
+
+    serializer = AsrNmtSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     sourceLanguage = request.data.get("sourceLanguage")
     targetLanguage = request.data.get("targetLanguage")
     text = request.data.get("text")
@@ -166,13 +165,7 @@ def nmt_tts(request):
 
 
 @extend_schema(
-    request=inline_serializer(
-        name="InlineAsrNmtTtsSerializer",
-        fields={
-            "sourceLanguage": serializers.CharField(),
-            "base64String": serializers.CharField(),
-        },
-    ),
+    request=AsrNmtTtsSerializer,
     responses={(200, "application/octet-stream"): OpenApiTypes.BINARY},
 )
 @api_view(["POST"])
@@ -183,6 +176,11 @@ def asr_nmt_tts(request):
     ASR-NMT-TTS (Automatic Speech Recognition - Neural Machine Translation - Text to Speech)
     Automatic Speech recongnition, translation and conversion to audio.
     """
+
+    serializer = AsrNmtTtsSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     sourceLanguage = request.data.get("sourceLanguage")
     targetLanguage = request.data.get("targetLanguage")
     base64String = request.data.get("base64String")
