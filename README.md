@@ -9,15 +9,19 @@ Should work fine with `Python >= 3.10`.
 pip install -r requirements.txt
 ```
 
-It uses [Bhashini Translator Package](https://github.com/dteklavya/bhashini_translator) heavily.
+It uses [Bhashini Translator Package](https://github.com/dteklavya/bhashini_translator) heavily. Make sure to [read the instructions](https://github.com/dteklavya/bhashini_translator?tab=readme-ov-file#pythonic-bhashini-translator) to setup your environment with API keys and others.
 
-Run `Flask` app:
+Aslo add `SECRET_KEY` and `DEBUG` to your environment for Django.
+
+Create a user to test the API: ```python transBharat/manage.py createsuperuser```
+
+Run `Django` app:
 
 ```
-flask app --debug
+python transBharat/manage.py runserver
 ```
 
-At this point, you can use `Postman` or other client for using APIs.
+At this point, you can use `Postman` or other client for using APIs. Or visit [Swagger end-point](http://localhost:8000/api/schema/swagger-ui/) to play with.
 
 Follwoing end-points are available ATM:
 
