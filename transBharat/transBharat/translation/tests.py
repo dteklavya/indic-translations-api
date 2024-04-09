@@ -232,7 +232,7 @@ class TestTranslationAPI(TestCase):
                 {
                     "sourceLanguage": "en",
                     "targetLanguage": "hi",
-                    "text": "hello",
+                    "base64String": mockstr,
                     "gender": "female",
                 },
             )

@@ -140,7 +140,7 @@ def nmt_tts(request):
     Text to speech, with translation to target language.
     """
 
-    serializer = AsrNmtSerializer(data=request.data)
+    serializer = NmtTtsSerializer(data=request.data)
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
