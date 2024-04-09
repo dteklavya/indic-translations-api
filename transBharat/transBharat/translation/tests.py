@@ -111,7 +111,10 @@ class TestTranslationAPI(TestCase):
         ) as mock_requests:
             self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
 
-            base64str = base64.b64encode(b"mock base64 encoded string")
+            mstr = "mock base64 encode string"
+            mstr = mstr.encode("ascii")
+            mockstr = base64.b64encode(mstr)
+            mockstr = mockstr.decode("ascii")
             mock_requests.return_value = b"mock base64 encoded string"
 
             response = self.client.post(
@@ -119,7 +122,7 @@ class TestTranslationAPI(TestCase):
                 {
                     "sourceLanguage": "en",
                     "targetLanguage": "hi",
-                    "base64String": base64str,
+                    "base64String": mockstr,
                 },
             )
             self.assertIsNotNone(response)
@@ -145,7 +148,10 @@ class TestTranslationAPI(TestCase):
         ) as mock_requests:
             self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
 
-            base64str = base64.b64encode(b"mock base64 encoded string")
+            mstr = "mock base64 encode string"
+            mstr = mstr.encode("ascii")
+            mockstr = base64.b64encode(mstr)
+            mockstr = mockstr.decode("ascii")
             mock_requests.return_value = b"mock base64 encoded string"
 
             response = self.client.post(
@@ -153,7 +159,7 @@ class TestTranslationAPI(TestCase):
                 {
                     "sourceLanguage": "en",
                     "targetLanguage": "hi",
-                    "base64String": base64str,
+                    "base64String": mockstr,
                 },
             )
             self.assertIsNotNone(response)
@@ -224,7 +230,10 @@ class TestTranslationAPI(TestCase):
         ) as mock_main:
             self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
 
-            mockstr = base64.b64encode(b"mock base64 encode string")
+            mstr = "mock base64 encode string"
+            mstr = mstr.encode("ascii")
+            mockstr = base64.b64encode(mstr)
+            mockstr = mockstr.decode("ascii")
             mock_main.return_value = mockstr
 
             response = self.client.post(
