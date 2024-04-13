@@ -23,6 +23,7 @@ from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
 )
+from transBharat.core.views import LogoutView
 
 
 urlpatterns = [
@@ -44,4 +45,7 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
+    path("auth", include("djoser.urls"), name="djoser_auth"),
+    path("auth/", include("djoser.urls.jwt"), name="djoser_auth_jwt"),
+    path("auth/logout", LogoutView.as_view(), name="logout"),
 ]

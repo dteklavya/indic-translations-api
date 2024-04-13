@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "djoser",
     "rest_framework_simplejwt.token_blacklist",
     "transBharat.core",
     "transBharat.translation",
@@ -74,7 +75,23 @@ SIMPLE_JWT = {
     "AUTH_COOKIE": "jwt-auth",
     "AUTH_COOKIE_HTTP_ONLY": True,
     "AUTH_COOKIE_SAMESITE": "Strict",
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
+
+# For debugging and development
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+DJOSER = {
+    "PASSWORD_RESET_CONFIRM_URL": "auth/password/reset-password-confirmation/?uid={uid}&token={token}",
+    "ACTIVATION_URL": "#/activate/{uid}/{token}",
+    "SEND_ACTIVATION_EMAIL": False,
+    "SERIALIZERS": {},
+}
+
+# Settings for email sent to users
+SITE_NAME = "TransBharat"
+
+DOMAIN = "localhost:3000"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
