@@ -40,7 +40,8 @@ const Login = () => {
             })
             .catch((error) => {
                 setError("root", {
-                    type: "manual", message: error.json.details
+                    // Todo: map the error message correctly
+                    type: "manual", message: error.message
                 })
             })
 
