@@ -17,8 +17,6 @@ export default function Home() {
 
     const { data: user } = useSWR("/auth/users/me", fetcher);
 
-    console.log(user);
-
     const { logout, removeTokens } = AuthActions();
 
     const handleLogout = () => {

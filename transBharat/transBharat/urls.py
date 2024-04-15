@@ -47,5 +47,5 @@ urlpatterns = [
     ),
     path("auth/", include("djoser.urls"), name="djoser_auth"),
     path("auth/", include("djoser.urls.jwt"), name="djoser_auth_jwt"),
-    path("auth/logout", LogoutView.as_view(), name="logout"),
+    path("auth/logout/", LogoutView.as_view(), name="logout"),
 ]
