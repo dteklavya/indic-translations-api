@@ -10,7 +10,7 @@ import Cookies from "js-cookie";
 import { emitWarning } from "process";
 
 // Base API settings
-const api = wretch("hhtp://localhost:8000").accept("application/json")
+const api = wretch("http://localhost:8000").accept("application/json")
 
 /**
  * Stores a token in cookies
