@@ -34,4 +34,4 @@ jobs:
         python manage.py test
 
     - name: 'Build Docker Image'
-      run: docker build --file Dockerfile --tag backend:$(date +%s)
+      run: docker build . --file Dockerfile --tag backend:$(date +%s)
