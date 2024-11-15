@@ -33,5 +33,5 @@ jobs:
         cd transBharat
         python manage.py test
 
-    - name: 'Build Docker Image'
+    - name: Build Docker Image
       run: docker build . --file Dockerfile --tag backend:$(date +%s)
